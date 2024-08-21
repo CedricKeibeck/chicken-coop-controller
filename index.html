@@ -184,8 +184,7 @@
                         return response.text();
                     })
                     .then(data => {
-                        alert('Response: ' + data);
-                        updateDoorAnimation(command); // Update the animation only after a successful request
+                        updateDoorAnimation(command); // Update the animation without showing any alert
                     })
                     .catch(error => {
                         console.error('Error:', error);
@@ -200,7 +199,6 @@
                     });
             }
         }
-
 
 
         function updateDoorAnimation(command) {
