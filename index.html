@@ -88,6 +88,18 @@
         .slats.open {
             transform: translateY(-100%);
         }
+        .chicken {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(100%);
+            transition: transform 1s ease-in-out;
+            width: 60%; /* Adjust size as necessary */
+            height: auto;
+        }
+        .slats.open + .chicken {
+            transform: translateX(-50%) translateY(0); /* Move the chicken up when the door opens */
+        }
         button {
             padding: 15px 25px;
             font-size: 18px;
@@ -135,6 +147,7 @@
                 <div class="slat"></div>
                 <div class="slat"></div>
             </div>
+            <img id="chicken" src="chicken.png" class="chicken" alt="Chicken">
         </div>
         <button id="closeDoorButton" onclick="sendRequest('/close')">🐔⬇️ Close Door</button>
         <div class="legs">
