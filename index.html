@@ -6,65 +6,61 @@
     <title>Chicken Coop Controller</title>
     <style>
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: Arial, sans-serif;
             text-align: center;
             margin-top: 50px;
-            background-color: #ffefd5; /* PapayaWhip background */
-            color: #8b4513; /* SaddleBrown color for text */
-        }
-        h1 {
-            font-size: 2.5em;
-            color: #d2691e; /* Chocolate color for the heading */
+            background-color: #f4f4f9;
         }
         button {
             padding: 15px 25px;
-            font-size: 18px;
-            margin: 15px;
+            font-size: 16px;
+            margin: 10px;
             cursor: pointer;
-            border-radius: 10px;
-            border: 2px solid #8b4513; /* SaddleBrown border */
-            background-color: #f5deb3; /* Wheat color */
-            color: #8b4513;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 200px; /* Fixed width for all buttons */
+            height: 70px; /* Fixed height for all buttons */
+            background-color: #f7e1b5;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
         }
         button:hover {
-            background-color: #ffdead; /* NavajoWhite color on hover */
+            background-color: #f0c674;
         }
-        .chicken-image {
-            width: 150px;
-            margin-top: 20px;
+        .icon {
+            font-size: 24px;
+            margin-right: 8px;
         }
     </style>
 </head>
 <body>
     <h1>Chicken Coop Controller</h1>
-    <div>
-        <button onclick="sendRequest('/open')">🐔⬆️ Open Door</button>
-        <button onclick="sendRequest('/close')">🐔⬇️ Close Door</button>
-        <button onclick="sendRequest('/status')">ℹ Get Status</button>
-    </div>
+    <button onclick="sendRequest('/open')">
+        <span class="icon">🐔⬆️</span>Open Door
+    </button>
+    <button onclick="sendRequest('/close')">
+        <span class="icon">🐔⬇️</span>Close Door
+    </button>
+    <button onclick="sendRequest('/status')">
+        <span class="icon">ℹ️</span>Get Status
+    </button>
 
     <script>
-        function getIpAddress() {
-            let ipAddress = localStorage.getItem('chickenCoopIP');
-            if (!ipAddress) {
-                ipAddress = prompt("Enter your public IP address:");
-                if (ipAddress) {
-                    localStorage.setItem('chickenCoopIP', ipAddress);
-                } else {
-                    alert('IP address is required to send the request.');
-                }
-            }
-            return ipAddress;
+        let ipAddress = localStorage.getItem('ipAddress') || prompt("Enter your public IP address:");
+        if (ipAddress) {
+            localStorage.setItem('ipAddress', ipAddress);
         }
 
         function sendRequest(command) {
-            let ipAddress = getIpAddress();
             if (ipAddress) {
                 fetch('http://' + ipAddress + command)
                     .then(response => response.text())
                     .then(data => alert('Response: ' + data))
                     .catch(error => alert('Error: ' + error));
+            } else {
+                alert('IP address is required to send the request.');
             }
         }
     </script>
