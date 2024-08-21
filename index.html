@@ -174,9 +174,9 @@
         }
         
         function sendRequest(command) {
-            let ipAddress = 'chicken-coop-controller.com'; // Use the domain name instead of the public IP
+            let ipAddress = getIpAddress();
             if (ipAddress) {
-                fetch('http://' + ipAddress + command)
+                fetch('https://cors-anywhere.herokuapp.com/http://' + ipAddress + command)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Request failed');
@@ -190,6 +190,8 @@
                     .catch(error => {
                         console.error('Error:', error);
                         alert('Request not possible, device may not be online.');
+                        // Redirect to request temporary access for CORS proxy
+                        window.location.href = 'https://cors-anywhere.herokuapp.com/corsdemo';
                     });
             }
         }
