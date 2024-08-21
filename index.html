@@ -172,34 +172,51 @@
             }
             return ipAddress;
         }
-        
-        function sendRequest(command) {
-            let ipAddress = getIpAddress();
-            if (ipAddress) {
-                fetch('https://cors-anywhere.herokuapp.com/http://' + ipAddress + command)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Request failed');
-                        }
-                        return response.text();
-                    })
-                    .then(data => {
-                        updateDoorAnimation(command); // Update the animation without showing any alert
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-        
-                        // Check if the error is likely due to CORS
-                        if (error.message.includes('Failed to fetch')) {
-                            alert('CORS error occurred. Redirecting to request temporary access.');
-                            window.location.href = 'https://cors-anywhere.herokuapp.com/corsdemo';
-                        } else {
-                            alert('Request not possible, device may not be online.');
-                        }
-                    });
-            }
+
+        function checkCorsProxy(callback) {
+            fetch('https://cors-anywhere.herokuapp.com/http://example.com', { method: 'HEAD' })
+                .then(response => {
+                    if (response.ok) {
+                        callback(true);  // CORS proxy is working
+                    } else {
+                        callback(false); // CORS proxy is not working
+                    }
+                })
+                .catch(() => {
+                    callback(false); // CORS proxy is not working
+                });
         }
 
+        function sendRequest(command) {
+            checkCorsProxy(isCorsProxyEnabled => {
+                if (isCorsProxyEnabled) {
+                    let ipAddress = getIpAddress();
+                    if (ipAddress) {
+                        fetch('https://cors-anywhere.herokuapp.com/http://' + ipAddress + command)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Request failed');
+                                }
+                                return response.text();
+                            })
+                            .then(data => {
+                                if (command === '/status') {
+                                    alert('Status: ' + data); // Show alert for status command
+                                }
+                                updateDoorAnimation(command); // Update the animation only after a successful request
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('Request not possible, device may not be online.');
+                            });
+                    }
+                } else {
+                    alert('Please enable the CORS proxy first.');
+                    // Redirect to request temporary access for CORS proxy
+                    window.location.href = 'https://cors-anywhere.herokuapp.com/corsdemo';
+                }
+            });
+        }
 
         function updateDoorAnimation(command) {
             const slats = document.getElementById('slats');
