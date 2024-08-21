@@ -172,11 +172,11 @@
             }
             return ipAddress;
         }
-
+        
         function sendRequest(command) {
             let ipAddress = getIpAddress();
             if (ipAddress) {
-                fetch('http://' + ipAddress + command)
+                fetch('https://cors-anywhere.herokuapp.com/http://' + ipAddress + command)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Request failed');
@@ -193,6 +193,7 @@
                     });
             }
         }
+
 
         function updateDoorAnimation(command) {
             const slats = document.getElementById('slats');
