@@ -1,7 +1,7 @@
 {
   "name": "Chicken Coop Controller",
   "short_name": "Coop Control",
-  "start_url": "/chicken-coop-control/",
+  "start_url": "/chicken-coop-controller/",
   "display": "standalone",
   "background_color": "#ffefd5",
   "theme_color": "#8b4513",
