@@ -172,10 +172,10 @@
 
         function sendRequest(command) {
             let ipAddress = getIpAddress();
+            updateDoorAnimation(command); // Ensure the animation runs regardless of the fetch result
             if (ipAddress) {
                 fetch('http://' + ipAddress + command)
                     .then(response => {
-                        updateDoorAnimation(command); // Move the animation call here
                         if (!response.ok) {
                             throw new Error('Request failed');
                         }
@@ -193,10 +193,13 @@
 
         function updateDoorAnimation(command) {
             const slats = document.getElementById('slats');
+            const chicken = document.getElementById('chicken');
             if (command === '/open') {
                 slats.classList.add('open');
+                chicken.classList.add('open');
             } else if (command === '/close') {
                 slats.classList.remove('open');
+                chicken.classList.remove('open');
             }
         }
     </script>
