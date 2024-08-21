@@ -13,14 +13,19 @@
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
             text-align: center;
-            margin-top: 80px; /* Increase margin to move everything down */
+            margin-top: 50px;
             background-color: #ffefd5; /* PapayaWhip background */
             color: #8b4513; /* SaddleBrown color for text */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         h1 {
             font-size: 2.5em;
             color: #d2691e; /* Chocolate color for the heading */
-            margin-bottom: 40px; /* Add margin to separate from the coop */
+            width: 100%;
+            text-align: center;
+            margin-bottom: 30px; /* Add some margin to separate from the coop */
         }
         .coop-container {
             position: relative;
@@ -29,8 +34,11 @@
             background-color: #d2691e;
             border-radius: 10px;
             border: 5px solid #8b4513;
-            margin: 0 auto;
-            padding-top: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 50px;
         }
         .roof {
             position: absolute;
@@ -41,15 +49,29 @@
             background-color: #8b4513;
             clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
         }
+        .legs {
+            position: absolute;
+            bottom: -30px;
+            left: 10%;
+            width: 80%;
+            height: 30px;
+            background-color: #8b4513;
+            display: flex;
+            justify-content: space-between;
+        }
+        .leg {
+            width: 15%;
+            height: 100%;
+            background-color: #654321;
+        }
         .door {
             width: 70%;
-            height: 35%;
+            height: 55%; /* Adjusted to move the slats up slightly */
             background-color: #8b4513;
             border: 2px solid #654321;
             overflow: hidden;
             position: relative;
-            margin: 0 auto;
-            top: 30px; /* Adjusted to move the door up */
+            margin: 10px 0;
         }
         .slats {
             position: absolute;
@@ -76,23 +98,24 @@
             color: #8b4513;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
             position: absolute;
+            width: 200px;
             text-align: center;
         }
         button:hover {
             background-color: #ffdead; /* NavajoWhite color on hover */
         }
         #getStatusButton {
-            top: -60px; /* Positioned above the coop */
+            top: -30px; /* Positioned just above the coop triangle */
             left: 50%;
             transform: translateX(-50%);
         }
         #openDoorButton {
-            top: 20px; /* Positioned just above the door rectangle */
+            top: 0px; /* Positioned just above the door slats */
             left: 50%;
             transform: translateX(-50%);
         }
         #closeDoorButton {
-            bottom: 20px; /* Positioned inside the coop rectangle but below the door */
+            bottom: -10px; /* Positioned between the bottom of the coop door slats and the building rectangle */
             left: 50%;
             transform: translateX(-50%);
         }
@@ -100,9 +123,9 @@
 </head>
 <body>
     <h1>Chicken Coop Controller</h1>
-    <button id="getStatusButton" onclick="sendRequest('/status')">ℹ️ Get Status</button>
     <div class="coop-container">
         <div class="roof"></div>
+        <button id="getStatusButton" onclick="sendRequest('/status')">ℹ️ Get Status</button>
         <button id="openDoorButton" onclick="sendRequest('/open')">🐔⬆️ Open Door</button>
         <div class="door">
             <div id="slats" class="slats">
@@ -114,6 +137,10 @@
             </div>
         </div>
         <button id="closeDoorButton" onclick="sendRequest('/close')">🐔⬇️ Close Door</button>
+        <div class="legs">
+            <div class="leg"></div>
+            <div class="leg"></div>
+        </div>
     </div>
 
     <script>
@@ -147,7 +174,6 @@
                     .catch(error => {
                         console.error('Error:', error);
                         alert('Request not possible, device may not be online.');
-                        updateDoorAnimation(command);  // Trigger animation even if the request fails
                     });
             }
         }
