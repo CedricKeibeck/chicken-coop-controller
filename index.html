@@ -63,9 +63,17 @@
             let ipAddress = getIpAddress();
             if (ipAddress) {
                 fetch('http://' + ipAddress + command)
-                    .then(response => response.text())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Request failed');
+                        }
+                        return response.text();
+                    })
                     .then(data => alert('Response: ' + data))
-                    .catch(error => alert('Error: ' + error));
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Request not possible, device may not be online.');
+                    });
             }
         }
     </script>
