@@ -4,57 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chicken Coop Controller</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Chicken Coop Controller">
     <link rel="apple-touch-icon" sizes="192x192" href="icon.png">
     <style>
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
             text-align: center;
             margin-top: 50px;
-            background-color: #ffefd5;
-            color: #8b4513;
+            background-color: #ffefd5; /* PapayaWhip background */
+            color: #8b4513; /* SaddleBrown color for text */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-
         h1 {
             font-size: 2.5em;
-            color: #d2691e;
+            color: #d2691e; /* Chocolate color for the heading */
+            width: 100%;
+            text-align: center;
         }
-
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 80%;
+            max-width: 800px;
+        }
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            margin-right: 20px;
+        }
         button {
             padding: 15px 25px;
             font-size: 18px;
-            margin: 15px;
+            margin: 15px 0;
             cursor: pointer;
             border-radius: 10px;
-            border: 2px solid #8b4513;
-            background-color: #f5deb3;
+            border: 2px solid #8b4513; /* SaddleBrown border */
+            background-color: #f5deb3; /* Wheat color */
             color: #8b4513;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            width: 200px;
+            text-align: center;
         }
-
         button:hover {
-            background-color: #ffdead;
+            background-color: #ffdead; /* NavajoWhite color on hover */
         }
-
         .coop-container {
             position: relative;
             width: 200px;
             height: 250px;
-            margin: 50px auto;
             background-color: #d2691e;
             border-radius: 10px;
             border: 5px solid #8b4513;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
         }
-
         .roof {
             position: absolute;
-            top: -40px;
+            top: -50px;
             left: 0;
-            width: 100%;
-            height: 40px;
+            width: 120%;
+            height: 50px;
             background-color: #8b4513;
             clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
         }
-
         .legs {
             position: absolute;
             bottom: -20px;
@@ -65,38 +87,31 @@
             display: flex;
             justify-content: space-between;
         }
-
         .leg {
             width: 10%;
             height: 100%;
             background-color: #654321;
         }
-
         .door {
-            position: absolute;
             width: 70%;
             height: 60%;
-            bottom: 10%;
-            left: 15%;
             background-color: #8b4513;
             border: 2px solid #654321;
             overflow: hidden;
-        }
-
-        .slats {
             position: relative;
+        }
+        .slats {
+            position: absolute;
             width: 100%;
             height: 100%;
             transition: transform 1s ease-in-out;
         }
-
         .slat {
             width: 100%;
             height: 20%;
             background-color: #654321;
             margin-bottom: 2%;
         }
-
         .slats.open {
             transform: translateY(-100%);
         }
@@ -104,26 +119,27 @@
 </head>
 <body>
     <h1>Chicken Coop Controller</h1>
-    <div>
-        <button onclick="sendRequest('/open')">🐔⬆️ Open Door</button>
-        <button onclick="sendRequest('/close')">🐔⬇️ Close Door</button>
-        <button onclick="sendRequest('/status')">ℹ️ Get Status</button>
-    </div>
-
-    <div class="coop-container">
-        <div class="roof"></div>
-        <div class="door">
-            <div id="slats" class="slats">
-                <div class="slat"></div>
-                <div class="slat"></div>
-                <div class="slat"></div>
-                <div class="slat"></div>
-                <div class="slat"></div>
-            </div>
+    <div class="container">
+        <div class="buttons-container">
+            <button onclick="sendRequest('/open')">🐔⬆️ Open Door</button>
+            <button onclick="sendRequest('/close')">🐔⬇️ Close Door</button>
+            <button onclick="sendRequest('/status')">ℹ️ Get Status</button>
         </div>
-        <div class="legs">
-            <div class="leg"></div>
-            <div class="leg"></div>
+        <div class="coop-container">
+            <div class="roof"></div>
+            <div class="door">
+                <div id="slats" class="slats">
+                    <div class="slat"></div>
+                    <div class="slat"></div>
+                    <div class="slat"></div>
+                    <div class="slat"></div>
+                    <div class="slat"></div>
+                </div>
+            </div>
+            <div class="legs">
+                <div class="leg"></div>
+                <div class="leg"></div>
+            </div>
         </div>
     </div>
 
@@ -145,12 +161,20 @@
             let ipAddress = getIpAddress();
             if (ipAddress) {
                 fetch('http://' + ipAddress + command)
-                    .then(response => response.text())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Request failed');
+                        }
+                        return response.text();
+                    })
                     .then(data => {
                         alert('Response: ' + data);
                         updateDoorAnimation(command);
                     })
-                    .catch(error => alert('Request not possible, device may not be online.'));
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Request not possible, device may not be online.');
+                    });
             }
         }
 
