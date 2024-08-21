@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chicken Coop Controller</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            padding: 15px 25px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chicken Coop Controller</h1>
+    <button onclick="sendRequest('/open')">Open Door</button>
+    <button onclick="sendRequest('/close')">Close Door</button>
+    <button onclick="sendRequest('/status')">Get Status</button>
+
+    <script>
+        let ipAddress = prompt("Enter your public IP address:");
+
+        function sendRequest(command) {
+            if (ipAddress) {
+                fetch('http://' + ipAddress + command)
+                    .then(response => response.text())
+                    .then(data => alert('Response: ' + data))
+                    .catch(error => alert('Error: ' + error));
+            } else {
+                alert('IP address is required to send the request.');
+            }
+        }
+    </script>
+</body>
+</html>
