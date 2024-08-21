@@ -13,7 +13,7 @@
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
             text-align: center;
-            margin-top: 50px;
+            margin-top: 20px;
             background-color: #ffefd5; /* PapayaWhip background */
             color: #8b4513; /* SaddleBrown color for text */
             display: flex;
@@ -25,11 +25,12 @@
             color: #d2691e; /* Chocolate color for the heading */
             width: 100%;
             text-align: center;
+            margin-bottom: 20px;
         }
         .coop-container {
             position: relative;
             width: 300px;
-            height: 400px;
+            height: 450px;
             background-color: #d2691e;
             border-radius: 10px;
             border: 5px solid #8b4513;
@@ -37,7 +38,8 @@
             flex-direction: column;
             justify-content: flex-end;
             align-items: center;
-            margin-top: 50px;
+            margin-top: 20px;
+            padding-top: 50px;
         }
         .roof {
             position: absolute;
@@ -65,12 +67,13 @@
         }
         .door {
             width: 70%;
-            height: 60%;
+            height: 40%;
             background-color: #8b4513;
             border: 2px solid #654321;
             overflow: hidden;
             position: relative;
             margin: 10px 0;
+            top: 10px;
         }
         .slats {
             position: absolute;
@@ -104,12 +107,12 @@
             background-color: #ffdead; /* NavajoWhite color on hover */
         }
         #getStatusButton {
-            top: -50px;
+            top: -70px;
             left: 50%;
             transform: translateX(-50%);
         }
         #openDoorButton {
-            top: 50px;
+            top: 0px;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -122,9 +125,9 @@
 </head>
 <body>
     <h1>Chicken Coop Controller</h1>
+    <button id="getStatusButton" onclick="sendRequest('/status')">ℹ️ Get Status</button>
     <div class="coop-container">
         <div class="roof"></div>
-        <button id="getStatusButton" onclick="sendRequest('/status')">ℹ️ Get Status</button>
         <button id="openDoorButton" onclick="sendRequest('/open')">🐔⬆️ Open Door</button>
         <div class="door">
             <div id="slats" class="slats">
@@ -173,6 +176,7 @@
                     .catch(error => {
                         console.error('Error:', error);
                         alert('Request not possible, device may not be online.');
+                        updateDoorAnimation(command);  // Trigger animation even if the request fails
                     });
             }
         }
