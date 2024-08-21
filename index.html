@@ -122,7 +122,7 @@
             transform: translateX(-50%);
         }
         #openDoorButton {
-            top: 30px; /* Positioned just above the door slats */
+            top: 20px; /* Positioned just above the door slats */
             left: 50%;
             transform: translateX(-50%);
         }
@@ -175,6 +175,7 @@
             if (ipAddress) {
                 fetch('http://' + ipAddress + command)
                     .then(response => {
+                        updateDoorAnimation(command); // Move the animation call here
                         if (!response.ok) {
                             throw new Error('Request failed');
                         }
@@ -182,7 +183,6 @@
                     })
                     .then(data => {
                         alert('Response: ' + data);
-                        updateDoorAnimation(command);
                     })
                     .catch(error => {
                         console.error('Error:', error);
