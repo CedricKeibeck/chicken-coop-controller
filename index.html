@@ -174,7 +174,7 @@
         }
         
         function sendRequest(command) {
-            let ipAddress = getIpAddress();
+            let ipAddress = 'chicken-coop-controller.com'; // Use the domain name instead of the public IP
             if (ipAddress) {
                 fetch('http://' + ipAddress + command)
                     .then(response => {
@@ -193,7 +193,7 @@
                     });
             }
         }
-        
+
 
         function updateDoorAnimation(command) {
             const slats = document.getElementById('slats');
