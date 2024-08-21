@@ -176,7 +176,9 @@
         function sendRequest(command) {
             let ipAddress = getIpAddress();
             if (ipAddress) {
-                fetch('http://' + ipAddress + command)
+                // Prepend the CORS Anywhere URL to your request
+                const url = 'https://cors-anywhere.herokuapp.com/http://' + ipAddress + command;
+                fetch(url)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Request failed');
