@@ -26,6 +26,8 @@
             width: 100%;
             text-align: center;
             margin-bottom: 100px; /* Add some margin to separate from the coop */
+            margin-left: 10px; /* Additional space on the left */
+            margin-right: 10px; /* Additional space on the right */
         }
         .coop-container {
             position: relative;
@@ -118,11 +120,12 @@
         }
         #getStatusButton {
             top: -145px; /* Positioned just above the coop triangle */
-            left: 50%;
-            transform: translateX(-50%);
+            left: auto; 
+            right: 10px; /* Aligns the button to the right of the page */
+            transform: translateX(0);
         }
         #openDoorButton {
-            top: 40px; /* Positioned just above the door slats */
+            top: 30px; /* Positioned just above the door slats */
             left: 50%;
             transform: translateX(-50%);
         }
@@ -172,7 +175,6 @@
 
         function sendRequest(command) {
             let ipAddress = getIpAddress();
-            updateDoorAnimation(command); // Ensure the animation runs regardless of the fetch result
             if (ipAddress) {
                 fetch('http://' + ipAddress + command)
                     .then(response => {
@@ -183,6 +185,7 @@
                     })
                     .then(data => {
                         alert('Response: ' + data);
+                        updateDoorAnimation(command); // Update the animation only after a successful request
                     })
                     .catch(error => {
                         console.error('Error:', error);
