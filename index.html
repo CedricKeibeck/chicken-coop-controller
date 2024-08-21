@@ -189,12 +189,18 @@
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('Request not possible, device may not be online.');
-                        // Redirect to request temporary access for CORS proxy
-                        window.location.href = 'https://cors-anywhere.herokuapp.com/corsdemo';
+        
+                        // Check if the error is likely due to CORS
+                        if (error.message.includes('Failed to fetch')) {
+                            alert('CORS error occurred. Redirecting to request temporary access.');
+                            window.location.href = 'https://cors-anywhere.herokuapp.com/corsdemo';
+                        } else {
+                            alert('Request not possible, device may not be online.');
+                        }
                     });
             }
         }
+
 
 
         function updateDoorAnimation(command) {
