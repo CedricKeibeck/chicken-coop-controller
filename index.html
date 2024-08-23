@@ -102,28 +102,42 @@
         .slats.open + .chicken {
             transform: translateX(-50%) translateY(0); /* Move the chicken up when the door opens */
         }
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8); /* Black see-through */
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-            flex-direction: column;
-            text-align: center;
-        }
-        .loading-overlay img {
+        .speech-bubble {
+            position: absolute;
+            top: -50px;
+            left: -60px;
             width: 150px;
-            height: auto;
+            background-color: #fff;
+            border: 2px solid #8b4513;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 14px;
+            color: #8b4513;
+            text-align: center;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
         }
-        .loading-overlay p {
-            font-size: 1.5em;
-            margin-top: 20px;
+        .speech-bubble:before {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 20px;
+            border-width: 10px;
+            border-style: solid;
+            border-color: #fff transparent transparent transparent;
+            width: 0;
+            height: 0;
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: -18px;
+            left: 17px;
+            border-width: 10px;
+            border-style: solid;
+            border-color: #8b4513 transparent transparent transparent;
+            width: 0;
+            height: 0;
         }
         button {
             padding: 15px 25px;
@@ -157,12 +171,34 @@
             left: 50%;
             transform: translateX(-50%);
         }
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: #fff;
+            font-size: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <h1>Chicken Coop Controller</h1>
+    <div id="loadingOverlay">
+        <div>
+            <img src="chicken.png" alt="Chicken" width="100" />
+            <div id="loadingMessage">Hold on, I will wake up the proxy for handling your requests!</div>
+        </div>
+    </div>
     <div class="coop-container">
         <div class="roof"></div>
+        <div class="speech-bubble" id="speechBubble">Hello! Let's get started!</div>
         <button id="getStatusButton" onclick="sendRequest('/status')">ℹ️ Get Status</button>
         <button id="openDoorButton" onclick="sendRequest('/open')">🐔⬆️ Open Door</button>
         <div class="door">
@@ -182,41 +218,10 @@
         </div>
     </div>
 
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay">
-        <img src="chicken.png" alt="Chicken">
-        <p id="loadingMessage">Hold on, I will wake up the proxy for handling your requests!</p>
-    </div>
-
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener("DOMContentLoaded", function() {
             wakeUpProxy();
         });
-
-        function wakeUpProxy() {
-            let ipAddress = getIpAddress();
-            if (ipAddress) {
-                fetch('https://stingy-whispering-roadway.glitch.me/http://' + ipAddress + '/status')
-                    .then(response => response.text())
-                    .then(data => {
-                        document.getElementById('loadingMessage').textContent = 'I woke up the proxy. You can now make requests!';
-                        setTimeout(() => {
-                            document.getElementById('loadingOverlay').style.display = 'none';
-
-                            // Interpret the status response to set the initial state of the gate
-                            if (data.includes('Door Opening')) {
-                                updateDoorAnimation('/open');
-                            } else if (data.includes('Door Closing')) {
-                                updateDoorAnimation('/close');
-                            }
-                        }, 2000);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Could not wake up the proxy. Please try again.');
-                    });
-            }
-        }
 
         function getIpAddress() {
             let ipAddress = localStorage.getItem('chickenCoopIP');
@@ -229,6 +234,25 @@
                 }
             }
             return ipAddress;
+        }
+
+        function wakeUpProxy() {
+            let ipAddress = getIpAddress();
+            if (ipAddress) {
+                fetch('https://stingy-whispering-roadway.glitch.me/http://' + ipAddress + '/status')
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('loadingMessage').innerText = "I woke up the proxy. You can now make requests!";
+                        updateDoorAnimation(data);
+                        setTimeout(() => {
+                            document.getElementById('loadingOverlay').style.display = 'none';
+                        }, 2000); // Hide the overlay after 2 seconds
+                    })
+                    .catch(error => {
+                        document.getElementById('loadingMessage').innerText = "Failed to wake up the proxy. Please try again.";
+                        console.error('Error:', error);
+                    });
+            }
         }
 
         function sendRequest(command) {
@@ -245,7 +269,7 @@
                         if (command === '/status') {
                             alert('Status: ' + data); // Show alert for status command
                         }
-                        updateDoorAnimation(command); // Update the animation only after a successful request
+                        updateDoorAnimation(data); // Update the animation only after a successful request
                     })
                     .catch(error => {
                         console.error('Error:', error);
@@ -254,15 +278,19 @@
             }
         }
 
-        function updateDoorAnimation(command) {
+        function updateDoorAnimation(data) {
             const slats = document.getElementById('slats');
             const chicken = document.getElementById('chicken');
-            if (command === '/open') {
+            if (data.includes('Last Action: Door Opening')) {
                 slats.classList.add('open');
                 chicken.classList.add('open');
-            } else if (command === '/close') {
+                document.getElementById('speechBubble').innerText = "The door is opening!";
+            } else if (data.includes('Last Action: Door Closing')) {
                 slats.classList.remove('open');
                 chicken.classList.remove('open');
+                document.getElementById('speechBubble').innerText = "The door is closing!";
+            } else {
+                document.getElementById('speechBubble').innerText = "Ready to go!";
             }
         }
     </script>
