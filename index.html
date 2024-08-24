@@ -124,6 +124,12 @@
             transform: translateX(-50%);
             width: 300px; /* Adjust width as necessary */
             height: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #8b4513; /* Color for the text inside the balloon */
+            padding: 20px; /* Padding inside the balloon for the text */
         }
         
         .loading-overlay .loading-chicken {
@@ -133,10 +139,6 @@
             margin-left: 90px; /* Moved to the right slightly */
         }
 
-        .loading-overlay p {
-            font-size: 1.5em;
-            margin-top: 20px;
-        }
         button {
             padding: 15px 25px;
             font-size: 18px;
@@ -196,9 +198,11 @@
 
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay">
-        <img src="balloon.png" class="text-balloon" alt="Text Balloon">
+        <div class="text-balloon">
+            <img src="balloon.png" alt="Text Balloon">
+            <p id="loadingMessage">Hold on, I will wake up the proxy for handling your requests!</p>
+        </div>
         <img src="chicken.png" class="loading-chicken" alt="Loading Chicken">
-        <p id="loadingMessage">Hold on, I will wake up the proxy for handling your requests!</p>
     </div>
 
     <script>
