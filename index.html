@@ -90,17 +90,21 @@
         .slats.open {
             transform: translateY(-100%);
         }
+        .chicken-container {
+            position: relative;
+            display: inline-block;
+        }
         .chicken {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%) translateY(100%);
-            transition: transform 1s ease-in-out;
-            width: 60%; /* Adjust size as necessary */
+            width: 150px; /* Adjust size as necessary */
             height: auto;
         }
-        .slats.open + .chicken {
-            transform: translateX(-50%) translateY(0); /* Move the chicken up when the door opens */
+        .text-balloon {
+            position: absolute;
+            top: -80px; /* Adjust to move it relative to the chicken */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px; /* Adjust width as necessary */
+            height: auto;
         }
         .loading-overlay {
             position: fixed;
@@ -116,18 +120,6 @@
             z-index: 10;
             flex-direction: column;
             text-align: center;
-        }
-        .loading-overlay img {
-            width: 150px;
-            height: auto;
-        }
-        .loading-overlay .text-balloon {
-            position: absolute;
-            top: -100px; /* You can manually adjust this value */
-            left: 30%;
-            transform: translateX(-50%);
-            width: 200px; /* Adjust the width as needed */
-            height: auto;
         }
         .loading-overlay p {
             font-size: 1.5em;
@@ -192,8 +184,10 @@
 
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay">
-        <img src="balloon.png" class="text-balloon" alt="Text Balloon">
-        <img src="chicken.png" alt="Chicken">
+        <div class="chicken-container">
+            <img src="balloon.png" class="text-balloon" alt="Text Balloon">
+            <img src="chicken.png" class="chicken" alt="Chicken">
+        </div>
         <p id="loadingMessage">Hold on, I will wake up the proxy for handling your requests!</p>
     </div>
 
