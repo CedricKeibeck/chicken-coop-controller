@@ -9,6 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Chicken Coop Controller">
     <link rel="apple-touch-icon" sizes="192x192" href="icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -179,13 +180,43 @@
             left: 50%;
             transform: translateX(-50%);
         }
+
+        /* Indicator styles */
+        .indicator {
+            margin-right: 10px; /* Space between icon and button text */
+            display: inline-block;
+            visibility: hidden; /* Initially hidden */
+            font-size: 1.2em; /* Adjust size if necessary */
+        }
+
+        .indicator.loading::before {
+            content: '\f110'; /* Font Awesome spinner icon */
+            font-family: "Font Awesome 6 Free"; 
+            font-weight: 900; 
+            animation: spin 1s infinite linear;
+        }
+
+        .indicator.complete::before {
+            content: '\f00c'; /* Font Awesome checkmark icon */
+            font-family: "Font Awesome 6 Free"; 
+            font-weight: 900; 
+            color: green;
+        }
+
+        /* Spinner animation */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
     <h1>Chicken Coop Controller</h1>
     <div class="coop-container">
         <div class="roof"></div>
+        <span id="statusIndicator" class="indicator"></span>
         <button id="getStatusButton" onclick="sendRequest('/status')">ℹ️ Get Status</button>
+        <span id="openIndicator" class="indicator"></span>
         <button id="openDoorButton" onclick="sendRequest('/open')">🐔⬆️ Open Door</button>
         <div class="door">
             <div id="slats" class="slats">
@@ -197,6 +228,7 @@
             </div>
             <img id="chicken" src="chicken.png" class="chicken" alt="Chicken">
         </div>
+        <span id="closeIndicator" class="indicator"></span>
         <button id="closeDoorButton" onclick="sendRequest('/close')">🐔⬇️ Close Door</button>
         <div class="legs">
             <div class="leg"></div>
@@ -215,7 +247,6 @@
         </div> <!-- Close the text-balloon div -->
         <img src="chicken.png" class="loading-chicken" alt="Loading Chicken">
     </div>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -247,7 +278,6 @@
             }
         }
 
-
         function getIpAddress() {
             let ipAddress = localStorage.getItem('chickenCoopIP');
             if (!ipAddress) {
@@ -264,6 +294,11 @@
         function sendRequest(command) {
             let ipAddress = getIpAddress();
             if (ipAddress) {
+                const indicator = document.querySelector(`#${getIndicatorId(command)}`);
+                indicator.classList.remove('complete');
+                indicator.classList.add('loading');
+                indicator.style.visibility = 'visible'; // Show the spinner
+
                 fetch('https://stingy-whispering-roadway.glitch.me/http://' + ipAddress + command)
                     .then(response => {
                         if (!response.ok) {
@@ -276,11 +311,28 @@
                             alert('Status: ' + data); // Show alert for status command
                         }
                         updateDoorAnimation(command); // Update the animation only after a successful request
+
+                        // Replace the spinner with a checkmark
+                        indicator.classList.remove('loading');
+                        indicator.classList.add('complete');
+                        setTimeout(() => indicator.style.visibility = 'hidden', 2000); // Hide after 2 seconds
                     })
                     .catch(error => {
                         console.error('Error:', error);
                         alert('Request not possible, device may not be online.');
+                        indicator.style.visibility = 'hidden'; // Hide the spinner on error
                     });
+            }
+        }
+
+        function getIndicatorId(command) {
+            switch (command) {
+                case '/status':
+                    return 'statusIndicator';
+                case '/open':
+                    return 'openIndicator';
+                case '/close':
+                    return 'closeIndicator';
             }
         }
 
