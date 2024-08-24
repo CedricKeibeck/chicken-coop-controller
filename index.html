@@ -118,8 +118,10 @@
             text-align: center;
         }
         .loading-overlay .text-balloon {
-            position: relative;
-            width: 300px; /* Adjust width as necessary */
+            top: 140px; /* Move the balloon slightly lower */
+            left: 40%; /* Move the balloon slightly to the right */
+            transform: translateX(-50%);
+            width: 400px;
             height: auto;
         }
         .loading-overlay .text-balloon img {
@@ -133,7 +135,7 @@
             transform: translate(-50%, -50%);
             width: 80%;
             color: #8b4513; /* Color for the text inside the balloon */
-            font-size: 1.2em; /* Adjust font size as needed */
+            font-size: 0.8em; /* Adjust font size as needed */
             text-align: center;
         }
         .loading-overlay .loading-chicken {
