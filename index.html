@@ -137,7 +137,7 @@
             transform: translate(-50%, -50%);
             width: 80%;
             color: #8b4513; /* Color for the text inside the balloon */
-            font-size: 0.8em; /* Adjust font size as needed */
+            font-size: 1.0em; /* Adjust font size as needed */
             text-align: center;
         }
         .loading-overlay .loading-chicken {
@@ -208,7 +208,9 @@
     <div id="loadingOverlay" class="loading-overlay">
         <div class="text-balloon">
             <img src="balloon.png" alt="Text Balloon">
-            <div class="text-message">Hold on, I will wake up the proxy for handling your requests!</div>
+            <div class="text-message">
+                Hold on,<br>
+                waking up the proxy!
         </div>
         <img src="chicken.png" class="loading-chicken" alt="Loading Chicken">
     </div>
@@ -224,10 +226,10 @@
                 fetch('https://stingy-whispering-roadway.glitch.me/http://' + ipAddress + '/status')
                     .then(response => response.text())
                     .then(data => {
-                        document.querySelector('.text-message').textContent = 'I woke up the proxy. You can now make requests!';
+                        document.querySelector('.text-message').innerHTML = 'I woke up the proxy.<br>You can now make requests!';
                         setTimeout(() => {
                             document.getElementById('loadingOverlay').style.display = 'none';
-
+        
                             // Interpret the status response to set the initial state of the gate
                             if (data.includes('Door Opening')) {
                                 updateDoorAnimation('/open');
@@ -242,6 +244,7 @@
                     });
             }
         }
+
 
         function getIpAddress() {
             let ipAddress = localStorage.getItem('chickenCoopIP');
