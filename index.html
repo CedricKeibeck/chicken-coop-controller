@@ -186,6 +186,7 @@
             margin-left: 10px; /* Space between text and icon */
             display: inline-block;
             visibility: hidden; /* Initially hidden */
+            font-size: 1.2em; /* Adjust size if necessary */
         }
 
         .indicator.loading::before {
@@ -213,14 +214,10 @@
     <h1>Chicken Coop Controller</h1>
     <div class="coop-container">
         <div class="roof"></div>
-        <button id="getStatusButton" onclick="sendRequest('/status')">
-            ℹ️ Get Status
-            <span id="statusIndicator" class="indicator"></span>
-        </button>
-        <button id="openDoorButton" onclick="sendRequest('/open')">
-            🐔⬆️ Open Door
-            <span id="openIndicator" class="indicator"></span>
-        </button>
+        <button id="getStatusButton" onclick="sendRequest('/status')">ℹ️ Get Status</button>
+        <span id="statusIndicator" class="indicator"></span>
+        <button id="openDoorButton" onclick="sendRequest('/open')">🐔⬆️ Open Door</button>
+        <span id="openIndicator" class="indicator"></span>
         <div class="door">
             <div id="slats" class="slats">
                 <div class="slat"></div>
@@ -231,10 +228,8 @@
             </div>
             <img id="chicken" src="chicken.png" class="chicken" alt="Chicken">
         </div>
-        <button id="closeDoorButton" onclick="sendRequest('/close')">
-            🐔⬇️ Close Door
-            <span id="closeIndicator" class="indicator"></span>
-        </button>
+        <button id="closeDoorButton" onclick="sendRequest('/close')">🐔⬇️ Close Door</button>
+        <span id="closeIndicator" class="indicator"></span>
         <div class="legs">
             <div class="leg"></div>
             <div class="leg"></div>
