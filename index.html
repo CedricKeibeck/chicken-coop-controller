@@ -216,7 +216,6 @@
         <img src="chicken.png" class="loading-chicken" alt="Loading Chicken">
     </div>
 
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             wakeUpProxy();
@@ -225,7 +224,7 @@
         function wakeUpProxy() {
             let ipAddress = getIpAddress();
             if (ipAddress) {
-                fetch('https://stingy-whispering-roadway.glitch.me/http://' + ipAddress + '/status')
+                fetch('https://ballistic-habitual-enemy.glitch.me/http://' + ipAddress + '/status')
                     .then(response => response.text())
                     .then(data => {
                         document.querySelector('.text-message').innerHTML = 'I woke up the proxy.<br>You can now make requests!';
@@ -247,7 +246,6 @@
             }
         }
 
-
         function getIpAddress() {
             let ipAddress = localStorage.getItem('chickenCoopIP');
             if (!ipAddress) {
@@ -264,7 +262,7 @@
         function sendRequest(command) {
             let ipAddress = getIpAddress();
             if (ipAddress) {
-                fetch('https://stingy-whispering-roadway.glitch.me/http://' + ipAddress + command)
+                fetch('https://ballistic-habitual-enemy.glitch.me/http://' + ipAddress + command)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Request failed');
