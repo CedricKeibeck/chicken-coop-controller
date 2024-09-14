@@ -147,6 +147,18 @@
             margin-left: 90px; /* Moved to the right slightly */
         }
 
+        /* Online/Offline Indicator */
+        #statusIndicator {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: red; /* Default to offline */
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
         button {
             padding: 15px 25px;
             font-size: 18px;
@@ -204,6 +216,9 @@
         </div>
     </div>
 
+    <!-- Status Indicator -->
+    <div id="statusIndicator"></div>
+
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay">
         <div class="text-balloon">
@@ -216,16 +231,16 @@
         <img src="chicken.png" class="loading-chicken" alt="Loading Chicken">
     </div>
 
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             wakeUpProxy();
+            checkEspStatus();  // Check ESP8266 status on page load
         });
 
         function wakeUpProxy() {
             let ipAddress = getIpAddress();
             if (ipAddress) {
-                fetch('https://stingy-whispering-roadway.glitch.me/http://' + ipAddress + '/status')
+                fetch('https://ballistic-habitual-enemy.glitch.me/http://' + ipAddress + '/status')
                     .then(response => response.text())
                     .then(data => {
                         document.querySelector('.text-message').innerHTML = 'I woke up the proxy.<br>You can now make requests!';
@@ -247,6 +262,22 @@
             }
         }
 
+        function checkEspStatus() {
+            fetch('https://ballistic-habitual-enemy.glitch.me/status')  // Fetch status from Glitch proxy
+                .then(response => response.json())
+                .then(data => {
+                    const statusIndicator = document.getElementById('statusIndicator');
+                    if (data.status === "online") {
+                        statusIndicator.style.backgroundColor = "green";  // Set indicator to green (online)
+                    } else {
+                        statusIndicator.style.backgroundColor = "red";  // Set indicator to red (offline)
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Could not retrieve ESP8266 status.');
+                });
+        }
 
         function getIpAddress() {
             let ipAddress = localStorage.getItem('chickenCoopIP');
@@ -264,7 +295,7 @@
         function sendRequest(command) {
             let ipAddress = getIpAddress();
             if (ipAddress) {
-                fetch('https://stingy-whispering-roadway.glitch.me/http://' + ipAddress + command)
+                fetch('https://ballistic-habitual-enemy.glitch.me/http://' + ipAddress + command)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Request failed');
