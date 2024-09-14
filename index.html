@@ -182,7 +182,7 @@
         });
 
         function checkEspStatus() {
-            fetch('https://ballistic-habitual-enemy.glitch.me/status')  // Fetch status from Glitch proxy
+            fetch('https://ballistic-habitual-enemy.glitch.me/status')  // Ping proxy
                 .then(response => response.json())
                 .then(data => {
                     const statusIndicator = document.getElementById('statusIndicator');
@@ -201,7 +201,7 @@
         function checkDoorStatus() {
             let ipAddress = getIpAddress();
             if (ipAddress) {
-                fetch('https://ballistic-habitual-enemy.glitch.me/http://' + ipAddress + '/status')
+                fetch('https://stingy-whispering-roadway.glitch.me/http://' + ipAddress + '/status')  // Request proxy
                     .then(response => response.text())
                     .then(data => {
                         if (data.includes('Door Opening')) {
@@ -233,7 +233,7 @@
         function sendRequest(command) {
             let ipAddress = getIpAddress();
             if (ipAddress) {
-                fetch('https://ballistic-habitual-enemy.glitch.me/http://' + ipAddress + command)
+                fetch('https://stingy-whispering-roadway.glitch.me/http://' + ipAddress + command)  // Request proxy
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Request failed');
