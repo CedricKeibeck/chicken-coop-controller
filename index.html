@@ -102,50 +102,6 @@
         .slats.open + .chicken {
             transform: translateX(-50%) translateY(0); /* Move the chicken up when the door opens */
         }
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8); /* Black see-through */
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-            flex-direction: column;
-            text-align: center;
-        }
-        .loading-overlay .text-balloon {
-            position: relative;
-            top: 110px;
-            left: 50%;
-            transform: translateX(-50%);
-            margin-left: -140px; /* Move the balloon 20px to the left */
-            width: 300px;
-            height: auto;
-        }
-        .loading-overlay .text-balloon img {
-            width: 100%;
-            height: auto;
-        }
-        .loading-overlay .text-message {
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            color: #000000; /* Color for the text inside the balloon */
-            font-size: 1.0em; /* Adjust font size as needed */
-            text-align: center;
-        }
-        .loading-overlay .loading-chicken {
-            width: 150px; /* Adjust size as necessary */
-            height: auto;
-            margin-top: 20px;
-            margin-left: 90px; /* Moved to the right slightly */
-        }
 
         /* Online/Offline Indicator */
         #statusIndicator {
@@ -219,48 +175,11 @@
     <!-- Status Indicator -->
     <div id="statusIndicator"></div>
 
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="text-balloon">
-            <img src="balloon.png" alt="Text Balloon">
-            <div class="text-message">
-                Hold on,<br>
-                waking up the proxy!
-            </div> <!-- Properly close the div -->
-        </div> <!-- Close the text-balloon div -->
-        <img src="chicken.png" class="loading-chicken" alt="Loading Chicken">
-    </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            wakeUpProxy();
             checkEspStatus();  // Check ESP8266 status on page load
+            checkDoorStatus();  // Check the door status on page load to set the initial animation
         });
-
-        function wakeUpProxy() {
-            let ipAddress = getIpAddress();
-            if (ipAddress) {
-                fetch('https://ballistic-habitual-enemy.glitch.me/http://' + ipAddress + '/status')
-                    .then(response => response.text())
-                    .then(data => {
-                        document.querySelector('.text-message').innerHTML = 'I woke up the proxy.<br>You can now make requests!';
-                        setTimeout(() => {
-                            document.getElementById('loadingOverlay').style.display = 'none';
-        
-                            // Interpret the status response to set the initial state of the gate
-                            if (data.includes('Door Opening')) {
-                                updateDoorAnimation('/open');
-                            } else if (data.includes('Door Closing')) {
-                                updateDoorAnimation('/close');
-                            }
-                        }, 2000);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Could not wake up the proxy. Please try again.');
-                    });
-            }
-        }
 
         function checkEspStatus() {
             fetch('https://ballistic-habitual-enemy.glitch.me/status')  // Fetch status from Glitch proxy
@@ -277,6 +196,25 @@
                     console.error('Error:', error);
                     alert('Could not retrieve ESP8266 status.');
                 });
+        }
+
+        function checkDoorStatus() {
+            let ipAddress = getIpAddress();
+            if (ipAddress) {
+                fetch('https://ballistic-habitual-enemy.glitch.me/http://' + ipAddress + '/status')
+                    .then(response => response.text())
+                    .then(data => {
+                        if (data.includes('Door Opening')) {
+                            updateDoorAnimation('/open');
+                        } else if (data.includes('Door Closing')) {
+                            updateDoorAnimation('/close');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Could not retrieve door status.');
+                    });
+            }
         }
 
         function getIpAddress() {
